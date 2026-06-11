@@ -11,10 +11,10 @@ body.light{--bg:#f0f4f8;--card:rgba(255,255,255,0.65);--text:#1a2332;--text2:#6b
 body{font-family:-apple-system,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","Noto Sans SC",sans-serif;background:var(--bg);color:var(--text);min-height:100vh;position:relative;overflow-x:hidden}
 body *{transition:background .3s,color .3s,border-color .3s,box-shadow .3s}
 body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;transition:background .4s}
-body:not(.light)::before{background:radial-gradient(ellipse at 20% 50%,rgba(30,58,138,0.3) 0%,transparent 50%),radial-gradient(ellipse at 80% 20%,rgba(99,102,241,0.2) 0%,transparent 40%),radial-gradient(ellipse at 50% 80%,rgba(59,130,246,0.18) 0%,transparent 50%),linear-gradient(180deg,rgba(15,23,42,0.5) 0%,rgba(30,58,138,0.12) 100%)}
+body.dark::before{background:radial-gradient(ellipse at 20% 50%,rgba(30,58,138,0.3) 0%,transparent 50%),radial-gradient(ellipse at 80% 20%,rgba(99,102,241,0.2) 0%,transparent 40%),radial-gradient(ellipse at 50% 80%,rgba(59,130,246,0.18) 0%,transparent 50%),linear-gradient(180deg,rgba(15,23,42,0.5) 0%,rgba(30,58,138,0.12) 100%)}
 body.light::before{background:radial-gradient(ellipse at 20% 50%,rgba(37,99,235,0.06) 0%,transparent 50%),radial-gradient(ellipse at 80% 20%,rgba(124,58,237,0.04) 0%,transparent 40%),radial-gradient(ellipse at 50% 80%,rgba(59,130,246,0.05) 0%,transparent 50%)}
 body::after{content:'';position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0}
-body:not(.light)::after{background-image:radial-gradient(1px 1px at 10% 20%,rgba(255,255,255,0.4),transparent),radial-gradient(1px 1px at 30% 60%,rgba(255,255,255,0.3),transparent),radial-gradient(1px 1px at 50% 10%,rgba(255,255,255,0.5),transparent),radial-gradient(1px 1px at 70% 40%,rgba(255,255,255,0.2),transparent),radial-gradient(1px 1px at 90% 80%,rgba(255,255,255,0.35),transparent),radial-gradient(1.5px 1.5px at 15% 85%,rgba(255,255,255,0.25),transparent),radial-gradient(1px 1px at 45% 45%,rgba(255,255,255,0.3),transparent),radial-gradient(1px 1px at 85% 15%,rgba(255,255,255,0.4),transparent),radial-gradient(1px 1px at 25% 35%,rgba(255,255,255,0.15),transparent),radial-gradient(1.5px 1.5px at 65% 75%,rgba(255,255,255,0.2),transparent)}
+body.dark::after{background-image:radial-gradient(1px 1px at 10% 20%,rgba(255,255,255,0.4),transparent),radial-gradient(1px 1px at 30% 60%,rgba(255,255,255,0.3),transparent),radial-gradient(1px 1px at 50% 10%,rgba(255,255,255,0.5),transparent),radial-gradient(1px 1px at 70% 40%,rgba(255,255,255,0.2),transparent),radial-gradient(1px 1px at 90% 80%,rgba(255,255,255,0.35),transparent),radial-gradient(1.5px 1.5px at 15% 85%,rgba(255,255,255,0.25),transparent),radial-gradient(1px 1px at 45% 45%,rgba(255,255,255,0.3),transparent),radial-gradient(1px 1px at 85% 15%,rgba(255,255,255,0.4),transparent),radial-gradient(1px 1px at 25% 35%,rgba(255,255,255,0.15),transparent),radial-gradient(1.5px 1.5px at 65% 75%,rgba(255,255,255,0.2),transparent)}
 body.light::after{background-image:radial-gradient(1px 1px at 10% 20%,rgba(0,0,0,0.06),transparent),radial-gradient(1px 1px at 30% 60%,rgba(0,0,0,0.04),transparent),radial-gradient(1px 1px at 50% 10%,rgba(0,0,0,0.07),transparent),radial-gradient(1px 1px at 70% 40%,rgba(0,0,0,0.03),transparent),radial-gradient(1px 1px at 90% 80%,rgba(0,0,0,0.05),transparent),radial-gradient(1px 1px at 45% 45%,rgba(0,0,0,0.04),transparent),radial-gradient(1px 1px at 85% 15%,rgba(0,0,0,0.06),transparent)}
 .ctr{max-width:960px;margin:0 auto;padding:40px 20px;position:relative;z-index:1}
 .hdr{text-align:center;margin-bottom:36px}
@@ -131,7 +131,7 @@ body.light::after{background-image:radial-gradient(1px 1px at 10% 20%,rgba(0,0,0
 .lb-close:hover{background:rgba(255,255,255,0.15);color:#fff}
 .lb-info{color:rgba(255,255,255,0.6);text-align:center;margin-top:12px;font-size:13px}
 @keyframes twinkle{0%,100%{opacity:0.3}50%{opacity:0.8}}
-body:not(.light)::after{animation:twinkle 8s ease-in-out infinite}
+body.dark::after{animation:twinkle 8s ease-in-out infinite}
 @media(max-width:640px){.di-grid{grid-template-columns:1fr}.tl-track{padding:12px 12px 16px}.tl-node{padding:0 8px}}
 
 /* Theme toggle */
@@ -139,28 +139,28 @@ body:not(.light)::after{animation:twinkle 8s ease-in-out infinite}
 .theme-toggle:hover{border-color:var(--mor);color:var(--text)}
 .theme-toggle .icon{font-size:16px;line-height:1}
 /* Light mode specific overrides */
-body.light .tr{background:rgba(37,99,235,0.04);border-color:rgba(37,99,235,0.1)}
-body.light .tl-track::before{background:linear-gradient(90deg,transparent,var(--border),transparent)}
-body.light .tl-dot{box-shadow:0 0 8px rgba(37,99,235,0.3)}
-body.light .dc.today{background:rgba(236,72,153,0.06)}
-body.light .dc.today .dn{box-shadow:0 0 12px rgba(236,72,153,0.3)}
-body.light .hdr h1{background:linear-gradient(135deg,#1a2332,#2563eb);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-body.light .ac:hover{background:rgba(37,99,235,0.04);border-color:var(--border)}
-body.light .sri:hover{background:rgba(37,99,235,0.04)}
-body.light .di-card:hover{box-shadow:0 4px 24px rgba(37,99,235,0.1)}
-body.light .lb-mask{background:rgba(255,255,255,0.85)}
-body.light .lb-mask img{box-shadow:0 8px 40px rgba(0,0,0,0.15)}
-body.light .lb-close{background:rgba(0,0,0,0.08);color:#333}
-body.light .lb-close:hover{background:rgba(0,0,0,0.15)}
-body.light .vpn{background:rgba(124,58,237,0.06);border-color:rgba(124,58,237,0.15)}
-body.light .dc.emp{background:rgba(240,244,248,0.5)}
-body.light .dc.emp:hover{background:rgba(240,244,248,0.5)}
-body.light .sch input::placeholder{color:#999}
-body.light .pc:hover{background:rgba(0,0,0,0.06)}
+body.dark .tr{background:rgba(91,156,246,0.06);border-color:rgba(91,156,246,0.1)}
+body.dark .tl-track::before{background:linear-gradient(90deg,transparent,var(--border),transparent)}
+body.dark .tl-dot{box-shadow:0 0 8px rgba(91,156,246,0.4)}
+body.dark .dc.today{background:rgba(244,114,182,0.08)}
+body.dark .dc.today .dn{box-shadow:0 0 12px rgba(244,114,182,0.4)}
+body.dark .hdr h1{background:linear-gradient(135deg,#e0e6f0,#5b9cf6);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+body.dark .ac:hover{background:rgba(91,156,246,0.06);border-color:var(--border)}
+body.dark .sri:hover{background:rgba(91,156,246,0.08)}
+body.dark .di-card:hover{box-shadow:0 4px 24px rgba(91,156,246,0.15)}
+body.dark .lb-mask{background:rgba(0,0,0,0.9)}
+body.dark .lb-mask img{box-shadow:0 8px 40px rgba(91,156,246,0.2)}
+body.dark .lb-close{background:rgba(255,255,255,0.08);color:rgba(255,255,255,0.6)}
+body.dark .lb-close:hover{background:rgba(255,255,255,0.15);color:#fff}
+body.dark .vpn{background:rgba(124,58,237,0.15);border-color:rgba(124,58,237,0.3)}
+body.dark .dc.emp{background:rgba(10,14,26,0.3)}
+body.dark .dc.emp:hover{background:rgba(10,14,26,0.3)}
+body.dark .sch input::placeholder{color:#5a6a80}
+body.dark .pc:hover{background:rgba(255,255,255,0.1)}
 </style>
 </head>
 <body>
-<div class="theme-toggle" onclick="toggleTheme()"><span class="icon" id="themeIcon">☀️</span><span id="themeLabel">浅色</span></div>
+<div class="theme-toggle" onclick="toggleTheme()"><span class="icon" id="themeIcon">🌙</span><span id="themeLabel">深空</span></div>
 <div class="ctr">
   <div class="hdr">
     <h1>设计早晚报</h1>
@@ -447,16 +447,16 @@ function renderDailyImages(){
 // Theme toggle
 function toggleTheme(){
   const body=document.body;
-  const isLight=body.classList.toggle('light');
+  const isDark=body.classList.toggle('dark');
   const icon=document.getElementById('themeIcon');
   const label=document.getElementById('themeLabel');
-  if(isLight){icon.textContent='🌙';label.textContent='深空'}
-  else{icon.textContent='☀️';label.textContent='浅色'}
-  localStorage.setItem('theme',isLight?'light':'dark');
+  if(isDark){icon.textContent='☀️';label.textContent='浅色'}
+  else{icon.textContent='🌙';label.textContent='深空'}
+  localStorage.setItem('theme',isDark?'dark':'light');
 }
 (function(){
   const saved=localStorage.getItem('theme');
-  if(saved==='light'){document.body.classList.add('light');setTimeout(function(){document.getElementById('themeIcon').textContent='🌙';document.getElementById('themeLabel').textContent='深空'},0)}
+  if(saved==='dark'){document.body.classList.add('dark');setTimeout(function(){document.getElementById('themeIcon').textContent='☀️';document.getElementById('themeLabel').textContent='浅色'},0)}
 })();
 
 function cp(){document.getElementById('ov').classList.remove('on');document.getElementById('pn').classList.remove('on')}
