@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>设计早晚报 · 日历</title>
+<style>
+  :root {
+    --bg: #FFF8F0;
+    --card: #FFFFFF;
+    --text: #2D2D2D;
+    --text-secondary: #888;
+    --border: #F0E8DC;
+    --morning: #FF8C42;
+    --morning-light: #FFF0E0;
+    --evening: #4A6FA5;
+    --evening-light: #E8EFF8;
+    --hover: #F5EDE3;
+    --today: #FF6B35;
+    --shadow: 0 2px 12px rgba(0,0,0,0.06);
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    font-family: -apple-system, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans SC", sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+  }
+  .container {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 40px 20px;
+  }
+  /* Header */
+  .header {
+    text-align: center;
+    margin-bottom: 36px;
+  }
+  .header h1 {
+    font-size: 28px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    margin-bottom: 8px;
+  }
+  .header .subtitle {
+    color: var(--text-secondary);
+    font-size: 14px;
+  }
+  .header .stats {
+    display: flex;
+    justify-content: center;
+    gap: 24px;
+    margin-top: 16px;
+    font-size: 13px;
+    color: var(--text-secondary);
+  }
+  .header .stats span {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .header .stats .dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    display: inline-block;
+  }
+  .dot.morning { background: var(--morning); }
+  .dot.evening { background: var(--evening); }
+
+  /* Month Nav */
+  .month-nav {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    margin-bottom: 24px;
+  }
+  .month-nav button {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 8px 14px;
+    cursor: pointer;
+    font-size: 18px;
+    color: var(--text);
+    transition: all 0.2s;
+  }
+  .month-nav button:hover {
+    background: var(--hover);
+    border-color: var(--morning);
+  }
+  .month-nav .month-label {
+    font-size: 20px;
+    font-weight: 600;
+    min-width: 160px;
+    text-align: center;
+  }
+
+  /* Calendar Grid */
+  .calendar {
+    background: var(--card);
+    border-radius: 16px;
+    box-shadow: var(--shadow);
+    overflow: hidden;
+  }
+  .weekday-header {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    background: #FAF5EE;
+    border-bottom: 1px solid var(--border);
+  }
+  .weekday-header div {
+    padding: 12px;
+    text-align: center;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-secondary);
+  }
+  .days-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+  }
+  .day-cell {
+    min-height: 90px;
+    border: 1px solid var(--border);
+    border-top: none;
+    border-left: none;
+    padding: 8px;
+    cursor: pointer;
+    transition: background 0.15s;
+    position: relative;
+  }
+  .day-cell:nth-child(7n+1) { border-left: none; }
+  .day-cell:hover { background: var(--hover); }
+  .day-cell.empty { background: #FCFAF7; cursor: default; }
+  .day-cell.empty:hover { background: #FCFAF7; }
+  .day-cell.today {
+    background: #FFF5EE;
+  }
+  .day-cell.today .day-number {
+    background: var(--today);
+    color: #fff;
+    border-radius: 50%;
+    width: 28px; height: 28px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .day-number {
+    font-size: 14px;
+    font-weight: 500;
+    margin-bottom: 4px;
+  }
+  .day-indicators {
+    display: flex;
+    gap: 4px;
+    flex-wrap: wrap;
+  }
+  .indicator {
+    font-size: 11px;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-weight: 500;
+  }
+  .indicator.morning {
+    background: var(--morning-light);
+    color: var(--morning);
+  }
+  .indicator.evening {
+    background: var(--evening-light);
+    color: var(--evening);
+  }
+  .day-count {
+    font-size: 11px;
+    color: var(--text-secondary);
+    margin-top: 4px;
+  }
+
+  /* Side Panel */
+  .overlay {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.3);
+    z-index: 100;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s;
+  }
+  .overlay.active {
+    opacity: 1;
+    pointer-events: all;
+  }
+  .panel {
+    position: fixed;
+    top: 0; right: 0;
+    width: 420px;
+    max-width: 90vw;
+    height: 100vh;
+    background: var(--card);
+    box-shadow: -4px 0 24px rgba(0,0,0,0.1);
+    z-index: 101;
+    transform: translateX(100%);
+    transition: transform 0.3s ease;
+    overflow-y: auto;
+    padding: 32px;
+  }
+  .panel.active { transform: translateX(0); }
+  .panel-close {
+    position: absolute;
+    top: 16px; right: 16px;
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    color: var(--text-secondary);
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    transition: background 0.2s;
+  }
+  .panel-close:hover { background: var(--hover); }
+  .panel-date {
+    font-size: 22px;
+    font-weight: 600;
+    margin-bottom: 24px;
+    padding-right: 40px;
+  }
+  .panel-section {
+    margin-bottom: 24px;
+  }
+  .panel-section-title {
+    font-size: 15px;
+    font-weight: 600;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .panel-section-title.morning { color: var(--morning); }
+  .panel-section-title.evening { color: var(--evening); }
+  .article-item {
+    padding: 12px;
+    border-radius: 8px;
+    margin-bottom: 8px;
+    transition: background 0.15s;
+  }
+  .article-item:hover { background: var(--hover); }
+  .article-title {
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 1.5;
+    margin-bottom: 4px;
+  }
+  .article-title a {
+    color: var(--text);
+    text-decoration: none;
+  }
+  .article-title a:hover { color: var(--today); }
+  .article-source {
+    font-size: 12px;
+    color: var(--text-secondary);
+  }
+  .empty-msg {
+    text-align: center;
+    color: var(--text-secondary);
+    padding: 32px 0;
+    font-size: 14px;
+  }
+
+  /* Mobile */
+  @media (max-width: 640px) {
+    .container { padding: 20px 12px; }
+    .day-cell { min-height: 64px; padding: 4px; }
+    .day-number { font-size: 12px; }
+    .indicator { font-size: 10px; padding: 1px 4px; }
+    .panel { width: 100vw; padding: 24px 20px; }
+    .header h1 { font-size: 22px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="header">
+    <h1>设计早晚报</h1>
+    <p class="subtitle">每日精选设计热点回顾</p>
+    <div class="stats" id="stats"></div>
+  </div>
+
+  <div class="month-nav">
+    <button id="prevMonth">‹</button>
+    <div class="month-label" id="monthLabel"></div>
+    <button id="nextMonth">›</button>
+  </div>
+
+  <div class="calendar">
+    <div class="weekday-header">
+      <div>日</div><div>一</div><div>二</div><div>三</div><div>四</div><div>五</div><div>六</div>
+    </div>
+    <div class="days-grid" id="daysGrid"></div>
+  </div>
+</div>
+
+<div class="overlay" id="overlay"></div>
+<div class="panel" id="panel">
+  <button class="panel-close" id="panelClose">×</button>
+  <div class="panel-date" id="panelDate"></div>
+  <div id="panelContent"></div>
+</div>
+
+<script>
+let data = [];
+let currentYear, currentMonth;
+
+const WEEKDAYS = ['周日','周一','周二','周三','周四','周五','周六'];
+
+async function loadData() {
+  try {
+    const resp = await fetch('../../memory/design-push-history.json');
+    const json = await resp.json();
+    data = json.pushedItems || [];
+  } catch(e) {
+    console.error('Failed to load data:', e);
+    data = [];
+  }
+  renderStats();
+  initCalendar();
+}
+
+function renderStats() {
+  const totalArticles = data.length;
+  const dates = new Set(data.map(d => d.pushedAt.slice(0,10)));
+  document.getElementById('stats').innerHTML = `
+    <span><span class="dot morning"></span> 早报</span>
+    <span><span class="dot evening"></span> 晚报</span>
+    <span>共 ${totalArticles} 篇 · ${dates.size} 天</span>
+  `;
+}
+
+function initCalendar() {
+  const now = new Date();
+  currentYear = now.getFullYear();
+  currentMonth = now.getMonth();
+  renderCalendar();
+  document.getElementById('prevMonth').onclick = () => { currentMonth--; if(currentMonth<0){currentMonth=11;currentYear--;} renderCalendar(); };
+  document.getElementById('nextMonth').onclick = () => { currentMonth++; if(currentMonth>11){currentMonth=0;currentYear++;} renderCalendar(); };
+  document.getElementById('overlay').onclick = closePanel;
+  document.getElementById('panelClose').onclick = closePanel;
+  document.addEventListener('keydown', e => { if(e.key==='Escape') closePanel(); });
+}
+
+function getArticlesForDate(dateStr) {
+  return data.filter(d => d.pushedAt.startsWith(dateStr));
+}
+
+function renderCalendar() {
+  const label = `${currentYear}年${currentMonth+1}月`;
+  document.getElementById('monthLabel').textContent = label;
+
+  const firstDay = new Date(currentYear, currentMonth, 1).getDay();
+  const daysInMonth = new Date(currentYear, currentMonth+1, 0).getDate();
+  const today = new Date();
+  const todayStr = `${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,'0')}-${String(today.getDate()).padStart(2,'0')}`;
+
+  let html = '';
+  // empty cells before first day
+  for(let i=0; i<firstDay; i++) {
+    html += '<div class="day-cell empty"></div>';
+  }
+
+  for(let d=1; d<=daysInMonth; d++) {
+    const dateStr = `${currentYear}-${String(currentMonth+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+    const articles = getArticlesForDate(dateStr);
+    const isToday = dateStr === todayStr;
+    const mornings = articles.filter(a => new Date(a.pushedAt).getHours() < 12);
+    const evenings = articles.filter(a => new Date(a.pushedAt).getHours() >= 12);
+
+    let indicators = '';
+    if(mornings.length) indicators += `<span class="indicator morning">🌅 ${mornings.length}</span>`;
+    if(evenings.length) indicators += `<span class="indicator evening">🌙 ${evenings.length}</span>`;
+
+    html += `<div class="day-cell${isToday?' today':''}" onclick="openPanel('${dateStr}', ${d})">
+      <div class="day-number">${d}</div>
+      <div class="day-indicators">${indicators}</div>
+      ${articles.length ? `<div class="day-count">${articles.length} 篇</div>` : ''}
+    </div>`;
+  }
+
+  document.getElementById('daysGrid').innerHTML = html;
+}
+
+function openPanel(dateStr, day) {
+  const articles = getArticlesForDate(dateStr);
+  const d = new Date(dateStr + 'T00:00:00');
+  const weekday = WEEKDAYS[d.getDay()];
+  document.getElementById('panelDate').textContent = `${d.getMonth()+1}月${day}日 ${weekday}`;
+
+  if(!articles.length) {
+    document.getElementById('panelContent').innerHTML = '<div class="empty-msg">这天没有推送记录 🍂</div>';
+  } else {
+    const mornings = articles.filter(a => new Date(a.pushedAt).getHours() < 12);
+    const evenings = articles.filter(a => new Date(a.pushedAt).getHours() >= 12);
+
+    let html = '';
+    if(mornings.length) {
+      html += `<div class="panel-section">
+        <div class="panel-section-title morning">🌅 设计早报</div>
+        ${mornings.map(renderArticle).join('')}
+      </div>`;
+    }
+    if(evenings.length) {
+      html += `<div class="panel-section">
+        <div class="panel-section-title evening">🌙 设计晚报</div>
+        ${evenings.map(renderArticle).join('')}
+      </div>`;
+    }
+    document.getElementById('panelContent').innerHTML = html;
+  }
+
+  document.getElementById('overlay').classList.add('active');
+  document.getElementById('panel').classList.add('active');
+}
+
+function renderArticle(item) {
+  return `<div class="article-item">
+    <div class="article-title"><a href="${item.link}" target="_blank" rel="noopener">${item.title}</a></div>
+    <div class="article-source">${item.source} · ${new Date(item.pushedAt).toLocaleTimeString('zh-CN',{hour:'2-digit',minute:'2-digit'})}</div>
+  </div>`;
+}
+
+function closePanel() {
+  document.getElementById('overlay').classList.remove('active');
+  document.getElementById('panel').classList.remove('active');
+}
+
+loadData();
+</script>
+</body>
+</html>
