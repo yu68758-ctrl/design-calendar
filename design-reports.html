@@ -456,7 +456,7 @@ function toggleTheme(){
 }
 (function(){
   const saved=localStorage.getItem('theme');
-  if(saved==='dark'){document.body.classList.add('dark');setTimeout(function(){document.getElementById('themeIcon').textContent='☀️';document.getElementById('themeLabel').textContent='浅色'},0)}
+  if(saved!=='light'){document.body.classList.add('dark');setTimeout(function(){document.getElementById('themeIcon').textContent='☀️';document.getElementById('themeLabel').textContent='浅色'},0)}
 })();
 
 function cp(){document.getElementById('ov').classList.remove('on');document.getElementById('pn').classList.remove('on')}
