@@ -109,7 +109,7 @@ body.light::after{background-image:radial-gradient(1px 1px at 10% 20%,rgba(0,0,0
 .tl-detail{padding:8px 14px;border-top:1px solid var(--border);font-size:11px;line-height:1.6;color:var(--text2);white-space:pre-line;max-height:120px;overflow-y:auto}
 .tl-detail em{color:var(--mor);font-style:italic}
 /* Daily images */
-.di-section{margin-top:40px;padding-top:32px;border-top:1px solid var(--border)}
+
 .di-title{font-size:18px;font-weight:300;margin-bottom:4px;letter-spacing:1px}
 .di-sub{font-size:13px;color:var(--text2);margin-bottom:20px}
 .di-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
@@ -182,11 +182,7 @@ body.dark .pc:hover{background:rgba(255,255,255,0.1)}
     <div class="wh"><div>日</div><div>一</div><div>二</div><div>三</div><div>四</div><div>五</div><div>六</div></div>
     <div class="dg" id="dg"></div>
   </div>
-  <div class="di-section" id="dailyImages">
-    <div class="di-title">🎨 每日图片赏析</div>
-    <div class="di-sub">精选设计视觉灵感 · 色板与分析</div>
-    <div class="di-grid" id="diGrid"></div>
-  </div>
+
 </div>
 <div class="lb-mask" id="lbMask" onclick="if(event.target===this||event.target.classList.contains('lb-close'))closeLb()"><div class="lb-close" onclick="closeLb()">×</div><img id="lbImg" src=""><div class="lb-info" id="lbInfo"></div></div>
 <div class="ov" id="ov"></div>
@@ -276,7 +272,6 @@ function init(){
   document.getElementById('stats').innerHTML='<span><span class="dot m"></span> 早报</span><span><span class="dot e"></span> 晚报</span><span>共 '+tot+' 篇 · '+dayCount+' 天</span>';
   renderTagBar();
   renderTimeline();
-  renderDailyImages();
 }
 
 function ga(ds){return D.articles[ds]||{morning:[],evening:[]}}
@@ -422,27 +417,6 @@ function showTrend(ds,el){
   if(!html.includes('<div class="tr"'))html+='<div style="color:var(--text2);font-size:13px">该日暂无趋势总结</div>';
   document.getElementById('tlDetail').innerHTML=html;
 }
-
-function renderDailyImages(){
-  const cards=[
-    {img:"img/MQ4IVCM31BM9M.png",title:"Clipboard - 2026-05-27 16.32.09",desc:"中心构图突出拟人小狗（穿汉服做奶茶），暖棕与红调营造温馨中式茶室氛围，卡通IP+国潮融合，可借鉴IP联动与场景化叙事。",palette:["#6c3c21", "#e8cea7", "#b5906a", "#936a46", "#d69863"]},
-    {img:"img/MQ4IVCM3KUNJS.png",title:"故事 Pin 图图片",desc:"分层构图（黑白报版+彩色活动页），高饱和撞色（红、黄、紫），复古未来+街头潮流风格，可借鉴信息层级设计与撞色视觉冲击。",palette:["#f5f5f5", "#f64115", "#111113", "#f4d40d", "#484ff3"]},
-    {img:"img/MQ4IVCM33Y0NM.png",title:"9e2a9d0becf1fd11577bdab200f61f93.png",desc:"中心放射构图（旋转木马载体），粉紫、明黄、天蓝高饱和色营造欢快氛围，卡通插画+活动宣传风格，可借鉴创意载体与色彩情绪引导。",palette:["#7bccf7", "#f2efed", "#99365e", "#202023", "#bec6ca"]},
-    {img:"img/MQ4IVCM3EZ72U.png",title:"Clipboard - 2026-05-27 16.31.30",desc:"角色为核心的对角线动态布局，蓝紫色霓虹光效为主，赛博朋克风格插画，可借鉴冷色调高光塑造科技感与光影融合手法。",palette:["#0a0b17", "#1c45bd", "#101c73", "#56aeeb", "#bbcbee"]},
-    {img:"img/MQ4IVCM37FBTL.png",title:"1775b40af1e5c09e8514e819316f1ea5.png",desc:"满版构图+窗口框架立体分层，暖橙粉色系搭配蓝黄点缀，3D卡通插画风格，可借鉴鲜艳色彩与立体元素搭配、复杂场景的视觉层次。",palette:["#fbd7ba", "#f89969", "#f59026", "#ea482c", "#facf8c"]},
-    {img:"img/MQ4IVCM3NN1A6.png",title:"Clipboard - 2026-05-18 11.03.13",desc:"满版重复构图，包装盒图形模块排列形成视觉韵律，红蓝黑白高对比撞色，波普风格，可借鉴重复图案与大胆色彩的冲击力。",palette:["#0b0910", "#255ed3", "#f2f1f3", "#c40b17", "#6c1c25"]},
-    {img:"img/MQ4IVCM36LBE0.png",title:"Clipboard - 2026-04-16 14.55.49",desc:"中心对称构图，产品居中暗调简洁留白，冷灰银灰为主凸显金属质感，极简科技风，可借鉴暗背景衬托质感、简洁排版增强科技感。",palette:["#20273a", "#616c84", "#b4b6bf", "#404a61", "#080b0f"]},
-    {img:"img/MQ4IVCM3ZETM2.png",title:"故事 Pin 图图片",desc:"错落分布不规则彩色形状，渐变色彩（蓝→粉→绿）闪粉质感梦幻，数字艺术风格，可借鉴渐变营造活力、不规则形状打破规整。",palette:["#f5f9f9", "#30d25b", "#f748c5", "#48c0f8", "#5ee0af"]},
-    {img:"img/MQ4IVCM3BNXU3.png",title:"Clipboard - 2026-05-27 16.34.28",desc:"近景特写主体突出，背景细节丰富，温暖丰富配色（红蓝绿），3D卡通插画创意叙事风格，可借鉴细节刻画增强真实感与故事性场景设计。",palette:["#252431", "#d8a086", "#936a66", "#603d3f", "#5a6477"]}
-  ];
-  const grid=document.getElementById('diGrid');
-  grid.innerHTML=cards.map(c=>{
-    const swatches=c.palette.map(cl=>'<div class="di-swatch" style="background:'+cl+'"></div>').join('');
-    const imgTag=c.img?'<img src="'+c.img+'" style="width:100%;height:100%;object-fit:cover" loading="lazy" alt="'+c.title+'" onclick="event.stopPropagation();openLb(\''+c.img+'\',\''+c.title.replace(/'/g,"\\'")+'\')">':'';
-    return '<div class="di-card"><div class="di-img" style="background:#f0f0f0">'+imgTag+'</div><div class="di-body"><div class="di-card-title">'+c.title+'</div><div class="di-card-desc">'+c.desc+'</div><div class="di-palette">'+swatches+'</div></div></div>';
-  }).join('');
-}
-
 
 // Theme toggle
 function toggleTheme(){
